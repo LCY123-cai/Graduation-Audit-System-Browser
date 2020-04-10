@@ -12,6 +12,7 @@ import vote from './vote'
 import failed_course from './failed_course'
 import report_replacement from './report_replacement'
 import handle_replacement from './handle_replacement'
+import management from './management'
 
 const mocks = [
   ...user,
@@ -24,7 +25,8 @@ const mocks = [
   ...vote,
   ...failed_course,
   ...report_replacement,
-  ...handle_replacement
+  ...handle_replacement,
+  ...management
 ]
 
 // for front mock

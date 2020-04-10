@@ -190,7 +190,7 @@ export const asyncRoutes = [
       {
         path: 'management',
         name: 'Management',
-        // component: () => import('@/views/score/index'),
+        component: () => import('@/views/management/index'),
         meta: { title: '用户管理', roles: ['admin'], icon: 'management'}//页面需要的权限
       },
     ]
