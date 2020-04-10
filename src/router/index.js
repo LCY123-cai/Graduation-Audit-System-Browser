@@ -125,21 +125,13 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
-    redirect: '/user/permission',
     name: 'UserSeries',
-    meta: { title: '用户管理', icon: 'user' },
     children: [
-      {
-        path: 'permission',
-        name: 'Permission',
-        // component: () => import('@/views/punishment/index'),
-        meta: {title: '角色权限', icon: 'permission'}
-      },
       {
         path: 'management',
         name: 'Management',
         // component: () => import('@/views/score/index'),
-        meta: {title: '用户管理', icon: 'management'}
+        meta: { title: '用户管理', icon: 'management'}
       },
     ]
   },
@@ -196,8 +188,24 @@ export const constantRoutes = [
     ]
   },
 
-  // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  // // 404 page must be placed at the end !!!
+  // {path: '*', redirect: '/404', hidden: true}
+];
+
+//异步挂载的路由
+//动态需要根据权限加载的路由表
+export const asyncRoutes = [
+  {
+    path: '/t',
+    component: Layout,
+    children: [
+      {
+        path: 'test',
+        name: 'Test',
+        meta: { title:'权限测试页', roles: ['admin'] }  //页面需要的权限
+      }]
+  },
+  { path: '*', redirect: '/404', hidden: true }
 ];
 
 const createRouter = () => new Router({
