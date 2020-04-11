@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
-    <div style="padding-bottom: 10px">
-<!--      <el-input v-model="listQuery.student_id" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
-<!--      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">-->
-<!--        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />-->
-<!--      </el-select>-->
-<!--      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">-->
-<!--        搜索-->
-<!--      </el-button>-->
-    </div>
+    <div style="padding-bottom: 10px"></div>
 
     <el-table
       :key="tableKey"
@@ -57,8 +49,7 @@
       </el-table-column>
       <el-table-column label="替代课程" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.replace_course" class="link-type">{{ row.replace_course }}</span>
-          <span v-else>0</span>
+          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.replace_course }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="替代课程学分" align="center" width="120">
@@ -80,6 +71,16 @@
       </el-table-column>
     </el-table>
 
+    <el-dialog :visible.sync="dialogPvVisible" title="替代课程">
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="key" label="Channel" />
+        <el-table-column prop="pv" label="Pv" />
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
+      </span>
+    </el-dialog>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
@@ -88,7 +89,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, createReport, updateReport } from '@/api/report_replacement'
+  import { fetchList, fetchPv, createReport, updateReport } from '@/api/report_replacement'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import { parseTime } from '@/utils'
@@ -118,6 +119,8 @@
         textMap: {
           create: 'Create'
         },
+        dialogPvVisible: false,
+        pvData: [],
         downloadLoading: false
       }
     },
@@ -199,6 +202,12 @@
       getSortClass: function(key) {
         const sort = this.listQuery.sort
         return sort === `+${key}` ? 'ascending' : 'descending'
+      },
+      handleFetchPv(id) {
+        fetchPv(id).then(response => {
+          this.pvData = response.data.pvData
+          this.dialogPvVisible = true
+        })
       }
     }
   }

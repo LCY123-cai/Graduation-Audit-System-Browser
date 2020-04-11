@@ -229,12 +229,6 @@
           type: undefined,
         }
       },
-      // handleFetchPv(pv) {
-      //   fetchPv(pv).then(response => {
-      //     this.pvData = response.data.pvData
-      //     this.dialogPvVisible = true
-      //   })
-      // },
       getSortClass: function(key) {
         const sort = this.listQuery.sort
         return sort === `+${key}` ? 'ascending' : 'descending'

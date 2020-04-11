@@ -23,3 +23,11 @@ export function createReport(data) {
     data
   })
 }
+
+export function fetchPv(pv) {
+  return request({
+    url: '/review/replacement/report/pv',
+    method: 'get',
+    params: { pv }
+  })
+}

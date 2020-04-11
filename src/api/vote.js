@@ -31,3 +31,11 @@ export function updateVote(data) {
     data
   })
 }
+
+export function fetchPv(pv) {
+  return request({
+    url: '/review/vote/pv',
+    method: 'get',
+    params: { pv }
+  })
+}
