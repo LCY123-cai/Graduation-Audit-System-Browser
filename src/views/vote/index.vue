@@ -27,46 +27,46 @@
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.student_id }}</span>
+          <span>{{ row.student_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.name }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所获荣誉或突出表现" align="center" min-width="150px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.honour }}</span>
+          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.honour }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="同意人数" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.agree" class="link-type">{{ row.agree }}</span>
+          <span v-if="row.agree">{{ row.agree }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="否决人数" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.disagree" class="link-type">{{ row.disagree }}</span>
+          <span v-if="row.disagree">{{ row.disagree }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="投票结果" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.vote_result" class="link-type">{{ row.vote_result }}</span>
+          <span v-if="row.vote_result">{{ row.vote_result }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" align="center" width="170">
         <template slot-scope="{row}">
-          <span v-if="row.publish_time" class="link-type">{{ row.publish_time }}</span>
+          <span v-if="row.publish_time">{{ row.publish_time }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="结束时间" align="center" class-name="status-col" width="170">
         <template slot-scope="{row}">
-          <span v-if="row.deadline" class="link-type">{{ row.deadline }}</span>
+          <span v-if="row.deadline">{{ row.deadline }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -82,6 +82,16 @@
       </el-table-column>
     </el-table>
 
+    <el-dialog :visible.sync="dialogPvVisible" title="所获荣誉或突出表现">
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="key" label="Channel" />
+        <el-table-column prop="pv" label="Pv" />
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
+      </span>
+    </el-dialog>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
@@ -90,7 +100,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, createVote, updateVote } from '@/api/vote'
+  import { fetchList, fetchPv, createVote, updateVote } from '@/api/vote'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import { parseTime } from '@/utils'
@@ -122,6 +132,8 @@
           update: 'Edit',
           create: 'Create'
         },
+        dialogPvVisible: false,
+        pvData: [],
         downloadLoading: false
       }
     },
@@ -161,7 +173,6 @@
       resetTemp() {
         this.temp = {
           id: undefined,
-          year: '',
         }
       },
       handleUpdate(row) {
@@ -203,6 +214,12 @@
       getSortClass: function(key) {
         const sort = this.listQuery.sort
         return sort === `+${key}` ? 'ascending' : 'descending'
+      },
+      handleFetchPv(id) {
+        fetchPv(id).then(response => {
+          this.pvData = response.data.pvData
+          this.dialogPvVisible = true
+        })
       }
     }
   }

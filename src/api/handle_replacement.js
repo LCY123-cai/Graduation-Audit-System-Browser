@@ -31,3 +31,11 @@ export function updateHandle(data) {
     data
   })
 }
+
+export function fetchPv(id) {
+  return request({
+    url: '/review/replacement/handle/pv',
+    method: 'get',
+    params: { id }
+  })
+}

@@ -27,49 +27,48 @@
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.student_id }}</span>
+          <span>{{ row.student_id }}</span>
           <el-tag>{{ row.classroom }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="姓名" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.name" class="link-type">{{ row.name }}</span>
+          <span v-if="row.name">{{ row.name }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="学院" align="center" width="80">
         <template slot-scope="{row}">
-          <span v-if="row.college" class="link-type">{{ row.college }}</span>
+          <span v-if="row.college">{{ row.college }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="原课程" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.original_course" class="link-type">{{ row.original_course }}</span>
+          <span v-if="row.original_course">{{ row.original_course }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="原课程学分" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.oc_credit" class="link-type">{{ row.oc_credit }}</span>
+          <span v-if="row.oc_credit">{{ row.oc_credit }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="替代课程" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.replace_course" class="link-type">{{ row.replace_course }}</span>
-          <span v-else>0</span>
+          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.replace_course }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="替代课程学分" align="center" width="110">
         <template slot-scope="{row}">
-          <span v-if="row.rc_credit" class="link-type">{{ row.rc_credit }}</span>
+          <span v-if="row.rc_credit">{{ row.rc_credit }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="提交日期" align="center" class-name="status-col" width="160">
         <template slot-scope="{row}">
-          <span v-if="row.report_time" class="link-type">{{ row.report_time }}</span>
+          <span v-if="row.report_time">{{ row.report_time }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -85,6 +84,16 @@
       </el-table-column>
     </el-table>
 
+    <el-dialog :visible.sync="dialogPvVisible" title="替代课程">
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="key" label="Channel" />
+        <el-table-column prop="pv" label="Pv" />
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
+      </span>
+    </el-dialog>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
@@ -93,7 +102,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, createHandle, updateHandle } from '@/api/handle_replacement'
+  import { fetchList, fetchPv, createHandle, updateHandle } from '@/api/handle_replacement'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import { parseTime } from '@/utils'
@@ -125,6 +134,8 @@
           update: 'Edit',
           create: 'Create'
         },
+        dialogPvVisible: false,
+        pvData: [],
         downloadLoading: false
       }
     },
@@ -206,6 +217,12 @@
       getSortClass: function(key) {
         const sort = this.listQuery.sort
         return sort === `+${key}` ? 'ascending' : 'descending'
+      },
+      handleFetchPv(id) {
+        fetchPv(id).then(response => {
+          this.pvData = response.data.pvData
+          this.dialogPvVisible = true
+        })
       }
     }
   }
