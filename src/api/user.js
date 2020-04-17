@@ -1,5 +1,7 @@
 import request from '@/utils/request'
 
+
+
 export function login(data) {
   return request({
     url: '/user/login',
@@ -8,11 +10,11 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo(username) {
   return request({
     url: '/user/info',
     method: 'get',
-    params: { token }
+    params: { username }
   })
 }
 
