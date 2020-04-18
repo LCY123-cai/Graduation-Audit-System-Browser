@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/replacement/report/list',
+    url: '/replacement/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchReport(id) {
   return request({
-    url: '/review/replacement/report/detail',
+    url: '/replacement/detail',
     method: 'get',
     params: { id }
   })
@@ -18,7 +18,7 @@ export function fetchReport(id) {
 
 export function createReport(data) {
   return request({
-    url: '/review/replacement/report/create',
+    url: '/replacement/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createReport(data) {
 
 export function fetchPv(pv) {
   return request({
-    url: '/review/replacement/report/pv',
+    url: '/replacement/pv',
     method: 'get',
     params: { pv }
   })

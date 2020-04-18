@@ -93,6 +93,7 @@
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import { parseTime } from '@/utils'
+  import {mapGetters} from 'vuex'
 
   const calendarTypeOptions = [
     { key: 'A', display_name: '计科18A' },
@@ -122,8 +123,6 @@
         listQuery: {
           page: 1,
           limit: 20,
-          student_id: undefined,
-          classname: undefined,
           sort: '+id'
         },
         temp: {
@@ -138,16 +137,21 @@
         downloadLoading: false
       }
     },
+    computed:{
+      ...mapGetters({username:'username'})
+    },
     created() {
       this.getList()
     },
     methods: {
       getList() {
         this.listLoading = true
+        this.listQuery.username=this.username
+        console.log(this.listQuery)
         fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
-          this.update_time = response.data.update_time
+          this.list = response.items
+          this.total = response.total
+          this.update_time = response.update_time
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false

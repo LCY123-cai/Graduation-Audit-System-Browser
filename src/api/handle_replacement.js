@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/replacement/handle/list',
+    url: '/replacement/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchHandle(id) {
   return request({
-    url: '/review/replacement/handle/detail',
+    url: '/replacement/detail',
     method: 'get',
     params: { id }
   })
@@ -18,7 +18,7 @@ export function fetchHandle(id) {
 
 export function createHandle(data) {
   return request({
-    url: '/review/replacement/handle/create',
+    url: '/replacement/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createHandle(data) {
 
 export function updateHandle(data) {
   return request({
-    url: '/review/replacement/handle/update',
+    url: '/replacement/update',
     method: 'post',
     data
   })
@@ -34,7 +34,7 @@ export function updateHandle(data) {
 
 export function fetchPv(id) {
   return request({
-    url: '/review/replacement/handle/pv',
+    url: '/replacement/pv',
     method: 'get',
     params: { id }
   })

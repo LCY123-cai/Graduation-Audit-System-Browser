@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/replacement/failed_course/list',
+    url: '/score/slist',
     method: 'get',
     params: query
   })

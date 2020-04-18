@@ -2,24 +2,23 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/score/list',
+    url: '/score/list',
     method: 'get',
     params: query
   })
 }
 
-export function fetchScore(id) {
+export function createScore(data) {
   return request({
-    url: '/review/score/detail',
-    method: 'get',
-    params: { id }
+    url: '/score/create',
+    method: 'post',
+    data
   })
 }
 
-export function createScore(data) {
+export function getScore() {
   return request({
-    url: '/review/score/create',
-    method: 'post',
-    data
+    url: '/score/get',
+    method: 'get'
   })
 }

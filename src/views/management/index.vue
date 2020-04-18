@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="padding-bottom: 10px">
-      <el-input v-model="listQuery.account" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.username" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
@@ -23,14 +23,9 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="账号" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.account }}</span>
+          <span class="link-type">{{ row.username }}</span>
         </template>
       </el-table-column>
       <el-table-column label="密码" align="center" min-width="170px">
@@ -40,7 +35,7 @@
       </el-table-column>
       <el-table-column label="角色" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.role }}</span>
+          <span class="link-type">{{ row.roles }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
@@ -48,7 +43,7 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>
@@ -59,16 +54,16 @@
 
     <el-dialog :title="dialogStatus==='create'?'创建':'更新'" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="temp.account" :disabled="dialogStatus!=='create'" style="width: 150px"/>
+        <el-form-item label="账号" prop="username">
+          <el-input v-model="temp.username" :disabled="dialogStatus!=='create'" style="width: 150px"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="temp.password" style="width: 170px"/>
         </el-form-item>
-        <el-form-item label="角色" prop="role">
-          <el-radio-group v-model="temp.role">
+        <el-form-item label="角色" prop="roles">
+          <el-radio-group v-model="temp.roles">
             <el-radio label="admin" />
-            <el-radio label="editor" />
+            <el-radio label="auditor" />
             <el-radio label="student" />
           </el-radio-group>
         </el-form-item>
@@ -88,10 +83,9 @@
 <script>
   /* eslint-disable */
 
-  import { fetchList, createManagement, updateManagement } from '@/api/management'
+  import { fetchList, createUser, updateUser ,deleteUser} from '@/api/user'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import { parseTime } from '@/utils'
 
   export default {
     name: 'ComplexTable',
@@ -106,12 +100,11 @@
         listQuery: {
           page: 1,
           limit: 20,
-          account: undefined,
+          username:undefined,
           sort: '+id'
         },
         sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
-          id: undefined,
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -120,9 +113,9 @@
           create: 'Create'
         },
         rules: {
-          account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
+          username: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
           password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-          role: [{ required: true, message: '角色不能为空', change: 'blur' }]
+          roles: [{ required: true, message: '角色不能为空', change: 'blur' }]
         },
         downloadLoading: false
       }
@@ -134,8 +127,12 @@
       getList() {
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
+          if (response.items[0].length>1){
+            this.list = response.items[0]
+          }else{
+            this.list = response.items
+          }
+          this.total = response.total
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false
@@ -176,16 +173,27 @@
       createData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-            createManagement(this.temp).then(() => {
+            createUser(this.temp).then((response) => {
+              this.temp.password=this.$md5(this.temp.password);
               this.list.unshift(this.temp)
               this.dialogFormVisible = false
-              this.$notify({
-                title: 'Success',
-                message: '创建成功',
-                type: 'success',
-                duration: 2000
-              })
+              if (response.code===200){
+                this.$notify({
+                  title: 'Success',
+                  message: response.message,
+                  type: 'success',
+                  duration: 2000
+                })
+              }
+              else{
+                this.$notify({
+                  title: 'Error',
+                  message: response.message,
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+
             })
           }
         })
@@ -201,29 +209,52 @@
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            updateManagement(tempData).then(() => {
-              const index = this.list.findIndex(v => v.id === this.temp.id)
+            // const tempData = Object.assign({}, this.temp)
+            updateUser(this.temp).then((response) => {
+              const index = this.list.findIndex(v => v.username === this.temp.username)
+              this.temp.password=this.$md5(this.temp.password)
               this.list.splice(index, 1, this.temp)
               this.dialogFormVisible = false
-              this.$notify({
-                title: 'Success',
-                message: '更新成功',
-                type: 'success',
-                duration: 2000
-              })
+              if (response.code===200){
+                this.$notify({
+                  title: 'Success',
+                  message: response.message,
+                  type: 'success',
+                  duration: 2000
+                })
+              }
+              else{
+                this.$notify({
+                  title: 'Error',
+                  message: response.message,
+                  type: 'error',
+                  duration: 2000
+                })
+              }
             })
           }
         })
       },
       handleDelete(row, index) {
-        this.$notify({
-          title: 'Success',
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
+        deleteUser(row).then((response) => {
+          if (response.code===200){
+            this.$notify({
+              title: '删除成功',
+              message: response.message,
+              type: 'success',
+              duration: 2000
+            })
+          }
+          else{
+            this.$notify({
+              title: '删除失败',
+              message: response.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+          this.list.splice(index, 1)
         })
-        this.list.splice(index, 1)
       },
       getSortClass: function(key) {
         const sort = this.listQuery.sort

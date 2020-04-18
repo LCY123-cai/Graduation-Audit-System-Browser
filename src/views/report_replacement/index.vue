@@ -14,72 +14,85 @@
     >
       <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.replacementId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.student_id }}</span>
-          <el-tag>{{ row.classroom }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="姓名" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.name" class="link-type">{{ row.name }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学院" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.college" class="link-type">{{ row.college }}</span>
-          <span v-else>0</span>
+          <span class="link-type">{{ row.studentId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="原课程" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.original_course" class="link-type">{{ row.original_course }}</span>
+          <span v-if="row.original_course">{{ row.original_course }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="原课程学分" align="center" width="120">
+      <el-table-column label="原课程学分" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.oc_credit" class="link-type">{{ row.oc_credit }}</span>
+          <span v-if="row.original_course_credit">{{ row.original_course_credit }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程" align="center" width="150">
+      <el-table-column label="替代课程A" align="center" width="150">
         <template slot-scope="{row}">
-          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.replace_course }}</el-link>
+          <span v-if="row.replacement_course_a">{{ row.replacement_course_a }}</span>
+          <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程学分" align="center" width="120">
+      <el-table-column label="替代课程学分A" align="center" width="110">
         <template slot-scope="{row}">
-          <span v-if="row.rc_credit" class="link-type">{{ row.rc_credit }}</span>
+          <span v-if="row.replacement_course_a_credit">{{ row.replacement_course_a_credit }}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="替代课程B" align="center" width="150">
+        <template slot-scope="{row}">
+          <span v-if="row.replacement_course_b">{{ row.replacement_course_b }}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="替代课程学分B" align="center" width="110">
+        <template slot-scope="{row}">
+          <span v-if="row.replacement_course_b_credit">{{ row.replacement_course_b_credit }}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="替代课程C" align="center" width="150">
+        <template slot-scope="{row}">
+          <span v-if="row.replacement_course_c">{{ row.replacement_course_c }}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="替代课程学分C" align="center" width="110">
+        <template slot-scope="{row}">
+          <span v-if="row.replacement_course_c_credit">{{ row.replacement_course_c_credit }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="提交日期" align="center" class-name="status-col" width="160">
         <template slot-scope="{row}">
-          <span v-if="row.report_time" class="link-type">{{ row.report_time }}</span>
+          <span v-if="row.report_time">{{ row.report_time }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核结果" align="center" class-name="status-col" width="120">
-        <template>
-          <span>通过</span>
+      <el-table-column label="审核结果" align="center" class-name="status-col" width="160">
+        <template slot-scope="{row}">
+          <span v-if="row.audit_result">{{ row.audit_result }}</span>
+          <span v-else>0</span>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogPvVisible" title="替代课程">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
-      </span>
-    </el-dialog>
+<!--    <el-dialog :visible.sync="dialogPvVisible" title="替代课程">-->
+<!--      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">-->
+<!--        <el-table-column prop="key" label="Channel" />-->
+<!--        <el-table-column prop="pv" label="Pv" />-->
+<!--      </el-table>-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>-->
+<!--      </span>-->
+<!--    </el-dialog>-->
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
@@ -107,13 +120,11 @@
         listQuery: {
           page: 1,
           limit: 20,
-          student_id: undefined,
           sort: '+id'
         },
         sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
-          id: undefined,
-          report_time:'',
+          studentId: undefined,
         },
         dialogFormVisible: false,
         textMap: {
@@ -130,9 +141,11 @@
     methods: {
       getList() {
         this.listLoading = true
+        console.log(this.listQuery)
         fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
+          console.log(response)
+          this.list = response.items[0]
+          this.total = response.items[0].length
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false

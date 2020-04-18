@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="padding-bottom: 10px">
-      <el-input v-model="listQuery.student_id" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
@@ -22,22 +22,17 @@
     >
       <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.voteId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span>{{ row.student_id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="姓名" align="center" min-width="100px">
-        <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.studentId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所获荣誉或突出表现" align="center" min-width="150px">
         <template slot-scope="{row}">
-          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.honour }}</el-link>
+          <el-link type="primary" @click="handleFetchPv(row.voteId)">点击查看详情</el-link>
         </template>
       </el-table-column>
       <el-table-column label="同意人数" align="center" width="100">
@@ -118,13 +113,11 @@
         listQuery: {
           page: 1,
           limit: 20,
-          student_id: undefined,
           sort: '+id'
         },
         sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
-          id: undefined,
-          update_time:''
+          studentId: undefined,
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -144,8 +137,8 @@
       getList() {
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
+          this.list = response.items[0]
+          this.total = response.items[0].length
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false
