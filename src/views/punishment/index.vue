@@ -131,7 +131,7 @@
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
           this.list = response.items[0]
-          this.total = response.total
+          this.total = response.items[0].length
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false

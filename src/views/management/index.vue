@@ -129,11 +129,12 @@
         fetchList(this.listQuery).then(response => {
           if (response.items[0].length>1){
             this.list = response.items[0]
+            this.total = response.items[0].length
           }else{
             this.list = response.items
+            this.total = response.items.length
           }
-          this.total = response.total
-          // Just to simulate the time of the request
+          // 模拟请求的时间
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)

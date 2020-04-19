@@ -141,9 +141,7 @@
     methods: {
       getList() {
         this.listLoading = true
-        console.log(this.listQuery)
         fetchList(this.listQuery).then(response => {
-          console.log(response)
           this.list = response.items[0]
           this.total = response.items[0].length
           // Just to simulate the time of the request

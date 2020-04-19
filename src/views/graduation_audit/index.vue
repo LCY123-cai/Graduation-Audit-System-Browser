@@ -63,7 +63,9 @@
       </el-table-column>
       <el-table-column label="学位评定委员会" align="center" width="140">
         <template slot-scope="{row}">
-          <span v-if="row.voting_results" class="link-type">通过</span>
+          <span v-if="row.voting_results=='1'">审核中</span>
+          <span v-else-if="row.voting_results=='2'">通过</span>
+          <span v-else-if="row.voting_results=='-1'">未通过</span>
           <span v-else></span>
         </template>
       </el-table-column>
@@ -82,7 +84,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button v-if="row.accum_credit>=100&&row.punishment_time>0||row.relearn_time>4||row.average_score<70||row.voting_results===''" size="mini" type="success" @click="handleVote(row)">
+          <el-button v-if="row.accum_credit>=100" size="mini" type="success" @click="handleVote(row)">
             发起审核投票
           </el-button>
         </template>
@@ -94,11 +96,14 @@
         <el-form-item label="学号">
           <el-input :disabled="true" v-model="temp.studentId" style="width: 130px"/>
         </el-form-item>
+        <el-form-item label="参与人数" prop="participant">
+          <el-input v-model="temp.participant" style="width: 70px"/>
+        </el-form-item>
         <el-form-item label="截止时间" prop="deadline">
           <el-date-picker v-model="temp.deadline"
                           size="small"
                           type="datetime"
-                          placeholder="选择截止时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
+                          placeholder="选择截止时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -165,6 +170,7 @@
         dialogFormVisible: false,
         rules: {
           deadline: [{ required: true, message: '截止时间不能为空', trigger: 'blur' }],
+          participant:[{ required:true,message:'参与人数不能为空',trigger:'blur' }],
         },
         downloadLoading: false
       }
@@ -216,8 +222,11 @@
         })
       },
       publishVote() {
-        console.log({ studentId : this.temp.studentId, deadline: this.temp.deadline })
-        createVote({ studentId : this.temp.studentId, deadline: this.temp.deadline }).then((response)=>{
+        createVote({
+          studentId:this.temp.studentId,
+          participant:this.temp.participant,
+          deadline:this.temp.deadline
+        }).then((response)=>{
           if (response.code===200){
             this.$notify({
               title: 'Success',
