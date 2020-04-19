@@ -103,10 +103,9 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, getScore } from '@/api/score'
+  import { fetchList, getScore ,createScore} from '@/api/score'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import { parseTime } from '@/utils'
 
   export default {
     name: 'ComplexTable',
@@ -139,9 +138,7 @@
     methods: {
       getList() {
         this.listLoading = true
-        console.log(this.listQuery)
         fetchList(this.listQuery).then(response => {
-          console.log(response)
           this.list = response.items[0]
           this.total = response.items[0].length
           // Just to simulate the time of the request
@@ -169,25 +166,30 @@
         this.handleFilter()
       },
       syncData() {
-            getScore().then((response) => {
-              this.list.unshift(this.temp)
-              if (response.code===200){
-                this.$notify({
-                  title: 'Success',
-                  message: response.message,
-                  type: 'success',
-                  duration: 2000
-                })
-              }
-              else{
-                this.$notify({
-                  title: 'Error',
-                  message: response.message,
-                  type: 'error',
-                  duration: 2000
-                })
-              }
-              this.getList()
+            //模拟从教务网获取数据
+            getScore().then((r) => {
+              //添加进自己数据库
+              createScore(r.data).then((response)=>{
+                console.log(response)
+                // this.list.unshift(this.temp)
+                // if (response.code===200){
+                //   this.$notify({
+                //     title: 'Success',
+                //     message: response.message,
+                //     type: 'success',
+                //     duration: 2000
+                //   })
+                // }
+                // else{
+                //   this.$notify({
+                //     title: 'Error',
+                //     message: response.message,
+                //     type: 'error',
+                //     duration: 2000
+                //   })
+                // }
+                // this.getList()
+              })
             })
       },
       getSortClass: function(key) {
