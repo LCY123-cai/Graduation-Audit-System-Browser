@@ -28,18 +28,17 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 决定用户是否已经通过getInfo请求获得必要的权限
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      console.log(store.getters)
       if (hasRoles) {
         next()
       } else {
         try {
           // 获取用户信息
           const { roles } = await store.dispatch('user/getInfo')
-          console.log(await store.dispatch('user/getInfo'))
+
           // 根据用户角色加载路由
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
-          // 动态加载路由
+          // 加载路由
           router.addRoutes(accessRoutes)
 
           // 确保路由加载完毕

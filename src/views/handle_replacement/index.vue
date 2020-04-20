@@ -31,41 +31,41 @@
           <span>{{ row.original_course }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="原课程学分" align="center" width="100">
-        <template slot-scope="{row}">
-          <span>{{ row.original_course_credit }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="原课程学分" align="center" width="100">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.original_course_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="替代课程A" align="center" width="150">
         <template slot-scope="{row}">
           <span>{{ row.replacement_course_a }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程A学分" align="center" width="120">
-        <template slot-scope="{row}">
-          <span>{{ row.replacement_course_a_credit }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="替代课程A学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_a_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="替代课程B" align="center" width="150">
         <template slot-scope="{row}">
           <span>{{ row.replacement_course_b }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程B学分" align="center" width="120">
-        <template slot-scope="{row}">
-          <span>{{ row.replacement_course_b_credit }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="替代课程B学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_b_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="替代课程C" align="center" width="150">
         <template slot-scope="{row}">
           <span>{{ row.replacement_course_c }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程C学分" align="center" width="120">
-        <template slot-scope="{row}">
-          <span>{{ row.replacement_course_c_credit }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="替代课程C学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_c_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="提交日期" align="center" class-name="status-col" width="160">
         <template slot-scope="{row}">
           <span>{{ row.report_time }}</span>

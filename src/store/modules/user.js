@@ -63,15 +63,12 @@ const actions = {
 
         let roles  = data.data[0].roles
 
-        // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles 必须是非空!')
         }
 
         commit('SET_ROLES', data.data[0].roles)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
-
-        console.log(data.data[0])
 
         resolve(data.data[0])
       }).catch(error => {

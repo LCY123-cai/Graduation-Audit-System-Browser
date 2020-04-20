@@ -2,23 +2,15 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/score/slist',
+    url: '/score/list',
     method: 'get',
     params: query
   })
 }
 
-export function fetchFailedCourse(id) {
+export function createReplacement(data) {
   return request({
-    url: '/review/replacement/my_course/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function createFailedCourse(data) {
-  return request({
-    url: '/review/replacement/my_course/create',
+    url: '/replacement/create',
     method: 'post',
     data
   })
