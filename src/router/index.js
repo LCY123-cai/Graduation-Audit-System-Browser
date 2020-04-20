@@ -151,6 +151,12 @@ export const asyncRoutes = [
         component: () => import('@/views/honour/index'),
         meta: {title: '所获荣誉•突出表现', roles: ['admin'], icon: 'honour'}
       },
+      {
+        path: 'student',
+        name: 'Student',
+        component: () => import('@/views/student/index'),
+        meta: {title: '学生信息', roles: ['admin'], icon: 'student'}
+      },
     ]
   },
   {
