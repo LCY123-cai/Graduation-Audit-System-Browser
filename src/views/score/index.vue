@@ -2,12 +2,9 @@
   <div class="app-container">
     <div style="padding-bottom: 10px">
       <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.studentClass" placeholder="班级" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
+<!--      <el-select v-model="listQuery.studentClass" placeholder="班级" clearable class="filter-item" style="width: 130px">-->
+<!--        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />-->
+<!--      </el-select>-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -24,28 +21,27 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="序号" align="center" width="80">
         <template slot-scope="{row}">
           <span>{{ row.scoreId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.studentId }}</span>
+          <span>{{ row.studentId }}</span>
           <el-tag>{{ row.studentClass}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="姓名" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.studentName" class="link-type">{{ row.studentName }}</span>
+          <span v-if="row.studentName">{{ row.studentName }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="学年" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.academic_year" class="link-type">{{ row.academic_year }}</span>
+          <span v-if="row.academic_year">{{ row.academic_year }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -119,13 +115,8 @@
         listQuery: {
           page: 1,
           limit: 20,
-          sort: '+id'
         },
         temp: {
-        },
-        sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
-        textMap: {
-          update: 'Update'
         },
         downloadLoading: false
       }
@@ -148,20 +139,6 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
       },
       syncData() {
             //模拟从教务网获取数据
@@ -188,10 +165,6 @@
                 this.getList()
               })
             })
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
       }
     }
   }

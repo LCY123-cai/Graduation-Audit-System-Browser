@@ -63,9 +63,9 @@
       </el-table-column>
       <el-table-column label="学位评定委员会" align="center" width="140">
         <template slot-scope="{row}">
-          <span v-if="row.voting_results=='1'">审核中</span>
-          <span v-else-if="row.voting_results=='2'">通过</span>
-          <span v-else-if="row.voting_results=='-1'">未通过</span>
+          <span v-if="row.voting_results=='1'" style="color: #E6A23C">审核中</span>
+          <span v-else-if="row.voting_results=='2'" style="color: #67C23A">通过</span>
+          <span v-else-if="row.voting_results=='-1'" style="color: #F56C6C">未通过</span>
           <span v-else></span>
         </template>
       </el-table-column>
@@ -81,7 +81,7 @@
           <span v-else-if="row.degree==='0'"><svg-icon icon-class="wrong" /></span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="130" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button v-if="row.graduation==='1'&&row.degree==='0'&&row.voting_results==null" size="mini" type="success" @click="handleVote(row)">
             发起审核投票

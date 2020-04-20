@@ -2,9 +2,6 @@
   <div class="app-container">
     <div style="padding-bottom: 10px">
       <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -18,9 +15,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="序号" align="center" width="80">
         <template slot-scope="{row}">
           <span>{{ row.voteId }}</span>
         </template>
@@ -82,7 +78,7 @@
               否决
             </el-button>
           </span>
-          <span style="color: #909399">该投票已结束</span>
+          <span v-else-if="row.voting_results=='2'" style="color: #909399">该投票已结束</span>
         </template>
       </el-table-column>
     </el-table>
@@ -126,7 +122,6 @@
           limit: 20,
           sort: '+id'
         },
-        sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
         },
         dialogHonourVisible: false,
@@ -155,20 +150,6 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
       },
       resetTemp() {
         this.temp = {
@@ -219,10 +200,6 @@
             })
           }
         })
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
       },
       handleFetchHonour(studentId,page,limit) {
         //获取该学生所获的荣誉或突出表现

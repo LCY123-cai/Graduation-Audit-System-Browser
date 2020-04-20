@@ -2,9 +2,6 @@
   <div class="app-container">
     <div style="padding-bottom: 10px">
       <el-input v-model="listQuery.username" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -21,21 +18,20 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
       <el-table-column label="账号" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.username }}</span>
+          <span>{{ row.username }}</span>
         </template>
       </el-table-column>
       <el-table-column label="密码" align="center" min-width="170px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.password }}</span>
+          <span>{{ row.password }}</span>
         </template>
       </el-table-column>
       <el-table-column label="角色" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.roles }}</span>
+          <span>{{ row.roles }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
@@ -101,17 +97,11 @@
           page: 1,
           limit: 20,
           username:undefined,
-          sort: '+id'
         },
-        sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
         },
         dialogFormVisible: false,
         dialogStatus: '',
-        textMap: {
-          update: 'Edit',
-          create: 'Create'
-        },
         rules: {
           username: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
           password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
@@ -127,12 +117,19 @@
       getList() {
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
-          if (response.items[0].length>1){
-            this.list = response.items[0]
-            this.total = response.items[0].length
-          }else{
-            this.list = response.items
-            this.total = response.items.length
+          //若该用户存在
+          if(response.items[0]!=null){
+            if (response.items[0].length>1){
+              this.list = response.items[0]
+              this.total = response.items[0].length
+            }else if (response.items.length===1){
+              this.list = response.items
+              this.total = response.items.length
+            }
+          }
+          else {
+            this.list=null
+            this.total=0
           }
           // 模拟请求的时间
           setTimeout(() => {
@@ -143,20 +140,6 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
       },
       resetTemp() {
         this.temp = {
@@ -256,10 +239,6 @@
           }
           this.list.splice(index, 1)
         })
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
       }
     }
   }

@@ -2,9 +2,6 @@
   <div class="app-container">
     <div style="padding-bottom: 10px">
       <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -21,9 +18,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="序号" align="center" width="80" >
         <template slot-scope="{row}">
           <span>{{ row.honourId }}</span>
         </template>
@@ -41,20 +37,17 @@
 <!--      </el-table-column>-->
       <el-table-column label="所获荣誉或突出表现" align="center" width="500">
         <template slot-scope="{row}">
-          <span v-if="row.honour">{{ row.honour }}</span>
-          <span v-else>0</span>
+          <span>{{ row.honour }}</span>
         </template>
       </el-table-column>
       <el-table-column label="达成日期" class-name="status-col" width="200">
         <template slot-scope="{row}">
-          <span v-if="row.obtain_time" class="link-type">{{ row.obtain_time }}</span>
-          <span v-else>0</span>
+          <span>{{ row.obtain_time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建日期" class-name="status-col" width="200">
         <template slot-scope="{row}">
-          <span v-if="row.record_time">{{ row.record_time }}</span>
-          <span v-else>0</span>
+          <span>{{ row.record_time }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -94,7 +87,6 @@
   import { fetchList, createHonour, updateHonour } from '@/api/honour'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import { parseTime } from '@/utils'
 
   export default {
     name: 'ComplexTable',
@@ -109,16 +101,11 @@
         listQuery: {
           page: 1,
           limit: 20,
-          sort: '+id'
         },
-        sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
           studentId: undefined,
         },
         dialogFormVisible: false,
-        textMap: {
-          create: 'Create'
-        },
         rules: {
           studentId: [{ required: true, message: '学号不能为空', trigger: 'blur' }],
           studentName: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
@@ -145,20 +132,6 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
       },
       resetTemp() {
         this.temp = {
@@ -197,10 +170,6 @@
             })
           }
         })
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
       }
     }
   }

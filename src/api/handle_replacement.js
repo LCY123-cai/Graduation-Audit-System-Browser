@@ -8,15 +8,7 @@ export function fetchList(query) {
   })
 }
 
-export function fetchHandle(id) {
-  return request({
-    url: '/replacement/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function createHandle(data) {
+export function createReplacement(data) {
   return request({
     url: '/replacement/create',
     method: 'post',
@@ -24,7 +16,7 @@ export function createHandle(data) {
   })
 }
 
-export function updateHandle(data) {
+export function updateReplacement(data) {
   return request({
     url: '/replacement/update',
     method: 'post',
@@ -32,10 +24,3 @@ export function updateHandle(data) {
   })
 }
 
-export function fetchPv(id) {
-  return request({
-    url: '/replacement/pv',
-    method: 'get',
-    params: { id }
-  })
-}

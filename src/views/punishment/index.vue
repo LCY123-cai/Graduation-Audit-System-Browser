@@ -2,9 +2,6 @@
   <div class="app-container">
     <div style="padding-bottom: 10px">
       <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -21,9 +18,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="punishmentId" sortable="custom" align="center" width="80" :class-name="getSortClass('punishmentId')">
+      <el-table-column label="序号" align="center" width="80">
         <template slot-scope="{row}">
           <span>{{ row.punishmentId }}</span>
         </template>
@@ -103,7 +99,6 @@
           page: 1,
           limit: 20,
           studentId: undefined,
-          sort: '+punishmentId'
         },
         sortOptions: [{ label: '按序号顺序', key: '+punishmentId' }, { label: '按序号逆序', key: '-punishmentId' }],
         punishmentOptions:['警告', '严重警告', '记过', '留校察看', '开除学籍'],
@@ -111,9 +106,6 @@
           record_time:'',
         },
         dialogFormVisible: false,
-        textMap: {
-          create: 'Create'
-        },
         rules: {
           studentId: [{ required: true, message: '学号不能为空', trigger: 'blur' }],
           studentName: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
@@ -141,20 +133,6 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'punishmentId') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+punishmentId'
-        } else {
-          this.listQuery.sort = '-punishmentId'
-        }
-        this.handleFilter()
       },
       resetTemp() {
         this.temp = {
@@ -194,10 +172,6 @@
             })
           }
         })
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
       }
     }
   }
