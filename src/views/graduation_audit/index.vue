@@ -11,8 +11,8 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="filterData">
-        筛选两证不齐的学生
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleAudit">
+        审核毕业条件
       </el-button>
     </div>
 
@@ -71,20 +71,19 @@
       </el-table-column>
       <el-table-column label="毕业证书" align="center" width="110">
         <template slot-scope="{row}">
-          <span v-if="row.accum_credit>=100" class="link-type"><svg-icon icon-class="right" /></span>
-          <span v-else><svg-icon icon-class="wrong" /></span>
+          <span v-if="row.graduation==='1'" class="link-type"><svg-icon icon-class="right" /></span>
+          <span v-else-if="row.graduation==='0'"><svg-icon icon-class="wrong" /></span>
         </template>
       </el-table-column>
       <el-table-column label="学位证书" align="center" width="110">
         <template slot-scope="{row}">
-          <span v-if="row.accum_credit>=100&&row.punishment_time===0&&row.relearn_time<4&&row.average_score>=70" class="link-type"><svg-icon icon-class="right" /></span>
-          <span v-else-if="row.accum_credit>=100&&row.punishment_time!==0||row.relearn_time>4||row.average_score<70&&row.voting_results==='1'"><svg-icon icon-class="right" /></span>
-          <span v-else><svg-icon icon-class="wrong" /></span>
+          <span v-if="row.degree==='1'" class="link-type"><svg-icon icon-class="right" /></span>
+          <span v-else-if="row.degree==='0'"><svg-icon icon-class="wrong" /></span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button v-if="row.accum_credit>=100" size="mini" type="success" @click="handleVote(row)">
+          <el-button v-if="row.graduation==='1'&&row.degree==='0'&&row.voting_results==null" size="mini" type="success" @click="handleVote(row)">
             发起审核投票
           </el-button>
         </template>
@@ -118,7 +117,7 @@
     </el-dialog>
 
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList(0)" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList()" />
 
   </div>
 </template>
@@ -126,7 +125,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList , fetchResultList } from '@/api/graduation_audit'
+  import { fetchList , doAudit } from '@/api/graduation_audit'
   import { createVote } from '@/api/vote'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -176,13 +175,13 @@
       }
     },
     created() {
-      this.getList(0)
+      this.getList()
     },
     methods: {
-      getList(num) {
+      getList() {
         this.listLoading = true
-        if(num===0){
           fetchList(this.listQuery).then(response => {
+            console.log(response.items[0])
             this.list = response.items[0]
             this.total = response.items[0].length
             // Just to simulate the time of the request
@@ -190,29 +189,31 @@
               this.listLoading = false
             }, 1.5 * 1000)
           })
-        }
-        else{
-          fetchResultList(this.listQuery).then(response => {
-            this.list = response.data.items
-            this.total = response.data.total
-            // Just to simulate the time of the request
-            setTimeout(() => {
-              this.listLoading = false
-            }, 1.5 * 1000)
-          })
-        }
-
-
-      },
-      filterData() {
-        this.listQuery.student_id=undefined
-        this.listQuery.type=undefined
-        this.listQuery.page = 1
-        this.getList(1)
       },
       handleFilter() {
         this.listQuery.page = 1
-        this.getList(0)
+        this.getList()
+      },
+      handleAudit(){
+        doAudit().then((response)=>{
+          if (response.code===200){
+            this.$notify({
+              title: 'Success',
+              message: response.message,
+              type: 'success',
+              duration: 2000
+            })
+          }
+          else{
+            this.$notify({
+              title: 'Error',
+              message: response.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+          this.getList()
+        })
       },
       handleVote(row) {
         this.temp = Object.assign({}, row) // copy obj
