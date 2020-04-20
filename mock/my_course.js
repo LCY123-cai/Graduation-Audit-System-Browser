@@ -22,7 +22,7 @@ for (let i = 0; i < count; i++) {
 
 export default [
   {
-    url: '/review/replacement/failed_course/list',
+    url: '/review/replacement/my_course/list',
     type: 'get',
     response: config => {
       const { classname ,student_id, page = 1, limit = 20, sort } = config.query
@@ -51,7 +51,7 @@ export default [
   },
 
   {
-    url: '/review/replacement/failed_course/detail',
+    url: '/review/replacement/my_course/detail',
     type: 'get',
     response: config => {
       const { id } = config.query
@@ -67,7 +67,7 @@ export default [
   },
 
   {
-    url: '/review/replacement/failed_course/create',
+    url: '/review/replacement/my_course/create',
     type: 'post',
     response: _ => {
       return {

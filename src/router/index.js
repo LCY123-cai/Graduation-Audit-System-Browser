@@ -107,9 +107,9 @@ export const asyncRoutes = [
     meta: { title: '学分替代', icon: 'replacement' },
     children: [
       {
-        path: 'failed_course',
+        path: 'my_course',
         name: 'Failed_Course',
-        component: () => import('@/views/failed_course/index'),
+        component: () => import('@/views/my_course/index'),
         meta: {title: '不及格课程', icon: 'failed'}
       },
       {

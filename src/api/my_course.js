@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchFailedCourse(id) {
   return request({
-    url: '/review/replacement/failed_course/detail',
+    url: '/review/replacement/my_course/detail',
     method: 'get',
     params: { id }
   })
@@ -18,7 +18,7 @@ export function fetchFailedCourse(id) {
 
 export function createFailedCourse(data) {
   return request({
-    url: '/review/replacement/failed_course/create',
+    url: '/review/replacement/my_course/create',
     method: 'post',
     data
   })

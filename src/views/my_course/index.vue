@@ -89,7 +89,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, createScore } from '@/api/failed_course'
+  import { fetchList, createScore } from '@/api/my_course'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import { parseTime } from '@/utils'

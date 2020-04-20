@@ -14,8 +14,6 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="syncData">
         从教务系统同步数据
       </el-button>
-<!--      最近一次同步:<i class="el-icon-time" />-->
-<!--      <span>{{ update_time }}</span>-->
     </div>
 
     <el-table
@@ -65,31 +63,31 @@
       </el-table-column>
       <el-table-column label="课程名称" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.course_name" class="link-type">{{ row.course_name }}</span>
+          <span v-if="row.course_name">{{ row.course_name }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="学分" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.credit" class="link-type">{{ row.credit }}</span>
+          <span v-if="row.credit">{{ row.credit }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="成绩" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.score" class="link-type">{{ row.score }}</span>
+          <span v-if="row.score">{{ row.score }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="补考成绩" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.retry_score" class="link-type">{{ row.retry_score }}</span>
+          <span v-if="row.retry_score">{{ row.retry_score }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="重学成绩" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.relearn_score" class="link-type">{{ row.relearn_score }}</span>
+          <span v-if="row.relearn_score">{{ row.relearn_score }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -168,27 +166,26 @@
       syncData() {
             //模拟从教务网获取数据
             getScore().then((r) => {
-              //添加进自己数据库
+              //添加进自己的数据库
               createScore(r.data).then((response)=>{
-                console.log(response)
                 // this.list.unshift(this.temp)
-                // if (response.code===200){
-                //   this.$notify({
-                //     title: 'Success',
-                //     message: response.message,
-                //     type: 'success',
-                //     duration: 2000
-                //   })
-                // }
-                // else{
-                //   this.$notify({
-                //     title: 'Error',
-                //     message: response.message,
-                //     type: 'error',
-                //     duration: 2000
-                //   })
-                // }
-                // this.getList()
+                if (response.code===200){
+                  this.$notify({
+                    title: 'Success',
+                    message: response.message,
+                    type: 'success',
+                    duration: 2000
+                  })
+                }
+                else{
+                  this.$notify({
+                    title: 'Error',
+                    message: response.message,
+                    type: 'error',
+                    duration: 2000
+                  })
+                }
+                this.getList()
               })
             })
       },
