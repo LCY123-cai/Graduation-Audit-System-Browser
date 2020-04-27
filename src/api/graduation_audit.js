@@ -2,24 +2,15 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/audit/list',
+    url: '/audit/list',
     method: 'get',
     params: query
   })
 }
 
-export function fetchResultList(query) {
+export function doAudit() {
   return request({
-    url: '/review/audit/result',
+    url: '/audit/doaudit',
     method: 'get',
-    params: query
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/review/audit/pv',
-    method: 'get',
-    params: { pv }
   })
 }

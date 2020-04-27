@@ -10,76 +10,70 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
-      <el-table-column label="序号" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="序号" align="center" width="80" >
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.replacementId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学号" min-width="100px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.student_id }}</span>
-          <el-tag>{{ row.classroom }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="姓名" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.name" class="link-type">{{ row.name }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学院" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.college" class="link-type">{{ row.college }}</span>
-          <span v-else>0</span>
+          <span>{{ row.studentId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="原课程" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.original_course" class="link-type">{{ row.original_course }}</span>
-          <span v-else>0</span>
+          <span>{{ row.original_course }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="原课程学分" align="center" width="120">
+<!--      <el-table-column label="原课程学分" align="center" width="100">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.original_course_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="替代课程A" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.oc_credit" class="link-type">{{ row.oc_credit }}</span>
-          <span v-else>0</span>
+          <span>{{ row.replacement_course_a }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程" align="center" width="150">
+<!--      <el-table-column label="替代课程A学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_a_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="替代课程B" align="center" width="150">
         <template slot-scope="{row}">
-          <el-link type="primary" @click="handleFetchPv(row.id)">{{ row.replace_course }}</el-link>
+          <span>{{ row.replacement_course_b }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="替代课程学分" align="center" width="120">
+<!--      <el-table-column label="替代课程B学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_b_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="替代课程C" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.rc_credit" class="link-type">{{ row.rc_credit }}</span>
-          <span v-else>0</span>
+          <span>{{ row.replacement_course_c }}</span>
         </template>
       </el-table-column>
+<!--      <el-table-column label="替代课程C学分" align="center" width="120">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.replacement_course_c_credit }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="提交日期" align="center" class-name="status-col" width="160">
         <template slot-scope="{row}">
-          <span v-if="row.report_time" class="link-type">{{ row.report_time }}</span>
-          <span v-else>0</span>
+          <span>{{ row.report_time }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核结果" align="center" class-name="status-col" width="120">
-        <template>
-          <span>通过</span>
+      <el-table-column label="审核结果" align="center" class-name="status-col" width="160">
+        <template slot-scope="{row}">
+          <span v-if="row.audit_result==='0'" style="color: #E6A23C">审核中</span>
+          <span v-else-if="row.audit_result==='1'" style="color: #67C23A">通过</span>
+          <span v-else-if="row.audit_result==='2'" style="color: #F56C6C">未通过</span>
         </template>
       </el-table-column>
     </el-table>
-
-    <el-dialog :visible.sync="dialogPvVisible" title="替代课程">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
-      </span>
-    </el-dialog>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
@@ -89,10 +83,10 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, fetchPv, createReport, updateReport } from '@/api/report_replacement'
+  import { fetchList } from '@/api/report_replacement'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import { parseTime } from '@/utils'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'ComplexTable',
@@ -107,22 +101,16 @@
         listQuery: {
           page: 1,
           limit: 20,
-          student_id: undefined,
-          sort: '+id'
         },
-        sortOptions: [{ label: '按序号顺序', key: '+id' }, { label: '按序号逆序', key: '-id' }],
         temp: {
-          id: undefined,
-          report_time:'',
+          studentId: undefined,
         },
         dialogFormVisible: false,
-        textMap: {
-          create: 'Create'
-        },
-        dialogPvVisible: false,
-        pvData: [],
         downloadLoading: false
       }
+    },
+    computed:{
+      ...mapGetters({username:'username'})
     },
     created() {
       this.getList()
@@ -130,10 +118,10 @@
     methods: {
       getList() {
         this.listLoading = true
+        this.listQuery.studentId = this.username
         fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
-          // Just to simulate the time of the request
+          this.list = response.items[0]
+          this.total = response.items[0].length
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
@@ -143,71 +131,11 @@
         this.listQuery.page = 1
         this.getList()
       },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
-      },
       resetTemp() {
         this.temp = {
           id: undefined,
           year: '',
         }
-      },
-      // handleUpdate(row) {
-      //   this.temp = Object.assign({}, row) // copy obj
-      //   this.temp.update_time = parseTime(new Date())
-      //   this.dialogStatus = 'update'
-      //   this.dialogFormVisible = true
-      //   this.$nextTick(() => {
-      //     this.$refs['dataForm'].clearValidate()
-      //   })
-      // },
-      // updateData() {
-      //   this.$refs['dataForm'].validate((valid) => {
-      //     if (valid) {
-      //       const tempData = Object.assign({}, this.temp)
-      //       updatePunishment(tempData).then(() => {
-      //         const index = this.list.findIndex(v => v.id === this.temp.id)
-      //         this.list.splice(index, 1, this.temp)
-      //         this.dialogFormVisible = false
-      //         this.$notify({
-      //           title: 'Success',
-      //           message: '更新成功',
-      //           type: 'success',
-      //           duration: 2000
-      //         })
-      //       })
-      //     }
-      //   })
-      // },
-      // handleDelete(row, index) {
-      //   this.$notify({
-      //     title: 'Success',
-      //     message: '删除成功',
-      //     type: 'success',
-      //     duration: 2000
-      //   })
-      //   this.list.splice(index, 1)
-      // },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
-      },
-      handleFetchPv(id) {
-        fetchPv(id).then(response => {
-          this.pvData = response.data.pvData
-          this.dialogPvVisible = true
-        })
       }
     }
   }

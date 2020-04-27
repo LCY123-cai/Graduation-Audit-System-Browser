@@ -1,18 +1,25 @@
 import request from '@/utils/request'
 
+
 export function fetchList(query) {
   return request({
-    url: '/replacement/list',
+    url: '/student/list',
     method: 'get',
     params: query
   })
 }
 
-export function updateReplacement(data) {
+export function createStudent(data) {
   return request({
-    url: '/replacement/update',
+    url: '/student/create',
     method: 'post',
     data
   })
 }
 
+export function getStudent() {
+  return request({
+    url: '/student/get',
+    method: 'get'
+  })
+}

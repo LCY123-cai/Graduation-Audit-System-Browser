@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/requirement/list',
+    url: '/requirement/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchRequirement(id) {
   return request({
-    url: '/review/requirement/detail',
+    url: '/requirement/detail',
     method: 'get',
     params: { id }
   })
@@ -19,7 +19,7 @@ export function fetchRequirement(id) {
 
 export function createRequirement(data) {
   return request({
-    url: '/review/requirement/create',
+    url: '/requirement/create',
     method: 'post',
     data
   })
@@ -27,7 +27,15 @@ export function createRequirement(data) {
 
 export function updateRequirement(data) {
   return request({
-    url: '/review/requirement/update',
+    url: '/requirement/update',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteRequirement(data) {
+  return request({
+    url: '/requirement/delete',
     method: 'post',
     data
   })

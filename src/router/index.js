@@ -57,41 +57,56 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/replacement',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '示例', icon: 'example' },
+    redirect: '/replacement/report_replacement',
+    name: 'Replacement',
+    meta: { title: '学分替代', icon: 'replacement' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: {title: '表格', icon: 'table'}
+        path: 'my_course',
+        name: 'My_Course',
+        component: () => import('@/views/my_course/index'),
+        meta: {title: '我的课程', icon: 'failed'}
       },
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: {title: '表单', icon: 'form'}
+        path: 'report_replacement',
+        name: 'Report_Replacement',
+        component: () => import('@/views/report_replacement/index'),
+        meta: {title: '申请记录', icon: 'record'}
       }
     ]
   },
-
   // // 404 page must be placed at the end !!!
-  // {path: '*', redirect: '/404', hidden: true}
+  {path: '*', redirect: '/404', hidden: true}
 ];
 
 //异步挂载的路由
 //动态需要根据权限加载的路由表
 export const asyncRoutes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {title: '主页', icon: 'dashboard'}
+    }]
+  },
   {
     path: '/audit',
     component: Layout,
@@ -100,7 +115,7 @@ export const asyncRoutes = [
         path: 'graduation_audit',
         name: 'Graduation_Audit',
         component: () => import('@/views/graduation_audit/index'),
-        meta: {title: '毕业审核', roles: ['admin'], icon: 'audit'}
+        meta: {title: '毕业审核', roles: ['admin','auditor'], icon: 'audit'}
       },
     ]
   },
@@ -112,7 +127,7 @@ export const asyncRoutes = [
         path: 'graduation_requirement',
         name: 'Graduation_Requirement',
         component: () => import('@/views/graduation_requirement/index'),
-        meta: {title: '毕业需求', roles: ['admin'], icon: 'requirement'}
+        meta: {title: '毕业需求', roles: ['admin','auditor'], icon: 'requirement'}
       },
     ]
   },
@@ -124,34 +139,20 @@ export const asyncRoutes = [
         path: 'vote',
         name: 'Vote',
         component: () => import('@/views/vote/index'),
-        meta: {title: '投票表决', roles: ['admin'], icon: 'vote'}
+        meta: {title: '投票表决', roles: ['admin','auditor'], icon: 'vote'}
       },
     ]
   },
   {
     path: '/replacement',
     component: Layout,
-    redirect: '/replacement/report_replacement',
-    name: 'Replacement',
-    meta: { title: '学分替代', icon: 'replacement' },
+    redirect: '/replacement/handle_replacement',
     children: [
-      {
-        path: 'failed_course',
-        name: 'Failed_Course',
-        component: () => import('@/views/failed_course/index'),
-        meta: {title: '不及格课程', icon: 'failed'}
-      },
-      {
-        path: 'report_replacement',
-        name: 'Report_Replacement',
-        component: () => import('@/views/report_replacement/index'),
-        meta: {title: '申请记录', icon: 'record'}
-      },
       {
         path: 'handle_replacement',
         name: 'Handle_Replacement',
         component: () => import('@/views/handle_replacement/index'),
-        meta: {title: '学分替代处理', roles: ['admin'], icon: 'handle'}
+        meta: {title: '学分替代处理', roles: ['admin','auditor'], icon: 'handle'}
       },
     ]
   },
@@ -160,25 +161,31 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/precondition/punishment',
     name: 'Precondition',
-    meta: { title: '前提数据', roles: ['admin'], icon: 'pre' },
+    meta: { title: '前提数据', roles: ['admin','auditor'], icon: 'pre' },
     children: [
       {
         path: 'punishment',
         name: 'Punishment',
         component: () => import('@/views/punishment/index'),
-        meta: {title: '处分记录', roles: ['admin'], icon: 'punishment'}
+        meta: {title: '处分记录', roles: ['admin','auditor'], icon: 'punishment'}
       },
       {
         path: 'score',
         name: 'Score',
         component: () => import('@/views/score/index'),
-        meta: {title: '课程成绩', roles: ['admin'], icon: 'score'}
+        meta: {title: '课程成绩', roles: ['admin','auditor'], icon: 'score'}
       },
       {
         path: 'honour',
         name: 'Honour',
         component: () => import('@/views/honour/index'),
-        meta: {title: '所获荣誉•突出表现', roles: ['admin'], icon: 'honour'}
+        meta: {title: '所获荣誉•突出表现', roles: ['admin','auditor'], icon: 'honour'}
+      },
+      {
+        path: 'student',
+        name: 'Student',
+        component: () => import('@/views/student/index'),
+        meta: {title: '学生信息', roles: ['admin','auditor'], icon: 'student'}
       },
     ]
   },

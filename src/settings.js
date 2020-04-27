@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'review',
+  title: 'audit',
 
   /**
    * @type {boolean} true | false

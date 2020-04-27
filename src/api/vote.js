@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/review/vote/list',
+    url: '/vote/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchVote(id) {
   return request({
-    url: '/review/vote/detail',
+    url: '/vote/detail',
     method: 'get',
     params: { id }
   })
@@ -18,7 +18,7 @@ export function fetchVote(id) {
 
 export function createVote(data) {
   return request({
-    url: '/review/vote/create',
+    url: '/vote/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createVote(data) {
 
 export function updateVote(data) {
   return request({
-    url: '/review/vote/update',
+    url: '/vote/update',
     method: 'post',
     data
   })
@@ -34,7 +34,7 @@ export function updateVote(data) {
 
 export function fetchPv(pv) {
   return request({
-    url: '/review/vote/pv',
+    url: '/vote/pv',
     method: 'get',
     params: { pv }
   })
