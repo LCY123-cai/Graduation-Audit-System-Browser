@@ -45,7 +45,7 @@
 
       <div class="tips">
         <span style="margin-right:20px;">用户名: admin</span>
-        <span> 密码: 大于六位即可</span>
+        <span> 密码: 123456</span>
       </div>
 
     </el-form>
@@ -65,8 +65,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '1841920339',
-        password: '111111'
+        username: 'admin',
+        password: '123456'
       },
       loginRules: {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
