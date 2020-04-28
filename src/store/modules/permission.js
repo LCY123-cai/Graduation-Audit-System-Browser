@@ -48,11 +48,11 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')||roles.includes('auditor')) {
-        accessedRoutes = asyncRoutes
-      } else {
+      // if (roles.includes('admin')||roles.includes('auditor')) {
+      //   accessedRoutes = asyncRoutes
+      // } else {
         accessedRoutes = constantRoutes
-      }
+      // }
 
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

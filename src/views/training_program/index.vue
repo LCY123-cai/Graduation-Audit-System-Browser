@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="padding-bottom: 10px">
-      <el-input v-model="listQuery.studentId" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.enrollment_year" placeholder="年级" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -29,64 +29,34 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="学号" min-width="180px">
+      <el-table-column label="序号" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.studentId }}</span>
-          <el-tag>{{ row.studentClass}}</el-tag>
+          <span>{{ row.trainingId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" align="center" width="100">
+      <el-table-column label="入学年份" align="center" min-width="80px">
         <template slot-scope="{row}">
-          <span v-if="row.studentName">{{ row.studentName }}</span>
-          <span v-else>0</span>
+          <span>{{ row.enrollment_year }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="年级" align="center" width="100">
+      <el-table-column label="学院" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span v-if="row.enrollment_year">{{ row.enrollment_year }}</span>
-          <span v-else>0</span>
+          <span>{{ row.college }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学院" align="center" width="100">
+      <el-table-column label="专业名称" align="center" min-width="170px">
         <template slot-scope="{row}">
-          <span v-if="row.college">{{ row.college }}</span>
-          <span v-else>0</span>
+          <span>{{ row.major }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="专业" align="center" width="190">
+      <el-table-column label="课程代码" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span v-if="row.major">{{ row.major }}</span>
-          <span v-else>0</span>
+          <span>{{ row.courseId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学年" align="center" width="100">
+      <el-table-column label="课程名称" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span v-if="row.academic_year">{{ row.academic_year }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学期" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.term">{{ row.term }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="课程代码" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.courseId">{{ row.courseId }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="课程名称" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.course_name">{{ row.course_name }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="课程性质" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.course_nature">{{ row.course_nature }}</span>
-          <span v-else>0</span>
+          <span>{{ row.course_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学分" align="center" width="100">
@@ -95,27 +65,14 @@
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="成绩" align="center" width="100">
+      <el-table-column label="课程性质" align="center" min-width="100px">
         <template slot-scope="{row}">
-          <span v-if="row.score">{{ row.score }}</span>
-          <span v-else>0</span>
+          <span>{{ row.course_nature }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="补考成绩" align="center" width="100">
+      <el-table-column label="建议修读学期" align="center" width="120">
         <template slot-scope="{row}">
-          <span v-if="row.retry_score">{{ row.retry_score }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="重学成绩" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.relearn_score">{{ row.relearn_score }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="重学标记" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.relearn_mark">{{ row.relearn_mark }}</span>
+          <span v-if="row.recommend_term">{{ row.recommend_term }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -129,7 +86,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList, importData} from '@/api/score'
+  import { fetchList, importData } from '@/api/training_program'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -176,6 +133,10 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
+      },
+      resetTemp() {
+        this.temp = {
+        }
       },
       uploadExcel(param){
         const formData = new FormData()

@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function importData(data) {
+  return request({
+    url: '/score/import',
+    method: 'post',
+    data
+  })
+}
+
 export function createScore(data) {
   return request({
     url: '/score/create',
