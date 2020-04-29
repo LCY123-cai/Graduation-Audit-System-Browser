@@ -7,3 +7,11 @@ export function fetchList(query) {
     params: query
   })
 }
+
+export function updateRequirement(data) {
+  return request({
+    url: '/requirement/update',
+    method: 'post',
+    data
+  })
+}

@@ -13,9 +13,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
-        统计毕业需求
-      </el-button>
     </div>
 
     <el-table
@@ -57,7 +54,42 @@
           <span>{{ row.elective_course_credit }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+            <el-button type="success" size="mini" @click="handleUpdate(row)">
+              编辑选修课学分
+            </el-button>
+        </template>
+      </el-table-column>
     </el-table>
+
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :model="temp" label-position="left" label-width="130px" style="width: 250px; margin-left:50px;">
+        <el-form-item label="年级">
+          <el-input disabled v-model="temp.enrollment_year" style="width: 120px"/>
+        </el-form-item>
+        <el-form-item label="学院">
+          <el-input disabled v-model="temp.college" style="width: 120px"/>
+        </el-form-item>
+        <el-form-item label="专业">
+          <el-input disabled v-model="temp.major" style="width: 220px"/>
+        </el-form-item>
+        <el-form-item label="必修课应修学分">
+          <el-input disabled v-model="temp.required_course_credit" style="width: 100px"/>
+        </el-form-item>
+        <el-form-item label="选修课应修学分">
+          <el-input v-model="temp.elective_course_credit" style="width: 100px"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="doUpdate()">
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList()" />
 
@@ -67,7 +99,7 @@
 <script>
   /* eslint-disable */
 
-  import { fetchList } from '@/api/graduation_requirement'
+  import { fetchList , updateRequirement} from '@/api/graduation_requirement'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -104,8 +136,8 @@
           label: '经法分院'
         }],
         temp: {
-          studentId: '',
         },
+        dialogFormVisible:false,
         downloadLoading: false
       }
     },
@@ -123,6 +155,33 @@
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
+        })
+      },
+      handleUpdate(row){
+        this.dialogFormVisible=true
+        this.temp=row
+      },
+      doUpdate(){
+        updateRequirement(this.temp).then((response)=>{
+          const index = this.list.findIndex(v => v.requirementId === this.temp.requirementId)
+          this.list.splice(index, 1, this.temp)
+          this.dialogFormVisible = false
+          if (response.code===200){
+            this.$notify({
+              title: 'Success',
+              message: response.message,
+              type: 'success',
+              duration: 2000
+            })
+          }
+          else{
+            this.$notify({
+              title: 'Error',
+              message: response.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
         })
       },
       handleFilter() {

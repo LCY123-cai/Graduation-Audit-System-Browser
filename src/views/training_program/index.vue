@@ -34,22 +34,22 @@
           <span>{{ row.trainingId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入学年份" align="center" min-width="80px">
+      <el-table-column label="入学年份" align="center" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.enrollment_year }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学院" align="center" min-width="100px">
+      <el-table-column label="学院" align="center" width="100px">
         <template slot-scope="{row}">
           <span>{{ row.college }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="专业名称" align="center" min-width="170px">
+      <el-table-column label="专业名称" align="center" min-width="190px">
         <template slot-scope="{row}">
           <span>{{ row.major }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程代码" align="center" min-width="100px">
+      <el-table-column label="课程代码" align="center" width="100px">
         <template slot-scope="{row}">
           <span>{{ row.courseId }}</span>
         </template>

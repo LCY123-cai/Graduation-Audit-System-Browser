@@ -13,9 +13,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
-        毕业审核
-      </el-button>
     </div>
 
     <el-table
@@ -27,12 +24,12 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="学号" min-width="130px" align="center">
+      <el-table-column label="学号"  align="center" width="130px">
         <template slot-scope="{row}">
           <span>{{ row.studentId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="110px" align="center">
+      <el-table-column label="姓名" align="center" width="110px">
         <template slot-scope="{row}">
           <span>{{ row.studentName }}</span>
         </template>
@@ -42,7 +39,7 @@
           <span>{{ row.college }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="专业" align="center" width="190">
+      <el-table-column label="专业" align="center" min-width="190">
         <template slot-scope="{row}">
           <span>{{ row.major }}</span>
         </template>
@@ -67,9 +64,24 @@
           <span>{{ row.failed_credit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="通过情况" align="center" width="110">
+      <el-table-column label="必修课应修学分" align="center" width="150">
         <template slot-scope="{row}">
-          <span>{{ row.pass_status }}</span>
+          <span>{{ row.required_course_credit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="选修课应修学分" align="center" width="150">
+        <template slot-scope="{row}">
+          <span>{{ row.elective_course_credit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="通过情况" align="center" min-width="110">
+        <template slot-scope="{row}">
+          <span v-if="row.gained_required_course_credit>=row.required_course_credit&&row.gained_elective_course_credit>=row.elective_course_credit&&row.failed_credit==='0.0'">
+            <svg-icon icon-class="right"></svg-icon>
+          </span>
+          <span v-else>
+            <svg-icon icon-class="wrong"></svg-icon>
+          </span>
         </template>
       </el-table-column>
     </el-table>
@@ -146,27 +158,6 @@
         this.listQuery.page = 1
         this.getList()
       },
-      // handleAudit(){
-      //   doAudit().then((response)=>{
-      //     if (response.code===200){
-      //       this.$notify({
-      //         title: 'Success',
-      //         message: response.message,
-      //         type: 'success',
-      //         duration: 2000
-      //       })
-      //     }
-      //     else{
-      //       this.$notify({
-      //         title: 'Error',
-      //         message: response.message,
-      //         type: 'error',
-      //         duration: 2000
-      //       })
-      //     }
-      //     this.getList()
-      //   })
-      // },
       resetTemp() {
         this.temp = {
           studentId: undefined,
