@@ -102,22 +102,37 @@
         <el-table-column prop="college" label="所在分院" align="center"/>
         <el-table-column prop="major" label="专业" align="center"/>
       </el-table>
-      <el-divider></el-divider>
+      <el-divider>不及格课程列表</el-divider>
       <el-table :data="failed" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="academic_year" label="学年" align="center"/>
-        <el-table-column prop="term" label="学期" align="center"/>
-        <el-table-column prop="courseId" label="不及格课程代码" align="center"/>
-        <el-table-column prop="course_name" label="不及格课程名称" align="center"/>
+        <el-table-column prop="academic_year" label="学年" align="center" width="100"/>
+        <el-table-column prop="term" label="学期" align="center" width="50"/>
+        <el-table-column prop="college" label="开课学院" align="center"/>
+        <el-table-column prop="courseId" label="不及格课程代码" align="center" width="150"/>
+        <el-table-column prop="course_name" label="不及格课程名称" align="center" width="150"/>
         <el-table-column prop="credit" label="课程学分" align="center"/>
         <el-table-column prop="course_nature" label="课程性质" align="center"/>
+        <el-table-column prop="maxscore" label="最高成绩" align="center"/>
       </el-table>
-      <el-divider></el-divider>
+      <el-divider>未修读的必修课列表</el-divider>
       <el-table :data="unchosen" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="college" label="开课学院" align="center"/>
         <el-table-column prop="courseId" label="未修必修课课程代码" width="150" align="center"/>
         <el-table-column prop="course_name" label="未修必修课课程名称"  width="150" align="center"/>
         <el-table-column prop="credit" label="课程学分" align="center"/>
         <el-table-column prop="course_nature" label="课程性质" align="center"/>
+      </el-table>
+      <el-divider>修读的选修课列表</el-divider>
+      <el-table :data="elective" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="academic_year" label="学年" align="center" width="100"/>
+        <el-table-column prop="term" label="学期" align="center" width="50"/>
+        <el-table-column prop="college" label="开课学院" align="center"/>
+        <el-table-column prop="courseId" label="选修课课程代码" width="150" align="center"/>
+        <el-table-column prop="course_name" label="选修课课程名称"  width="150" align="center"/>
+        <el-table-column prop="credit" label="课程学分" align="center"/>
+        <el-table-column prop="course_nature" label="课程性质" align="center" width="120"/>
+        <el-table-column prop="score" label="成绩" align="center"/>
+        <el-table-column prop="retry_score" label="补考成绩" align="center"/>
+        <el-table-column prop="relearn_score" label="重修成绩" align="center"/>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -134,7 +149,8 @@
 
   import { fetchList , getDetail } from '@/api/graduation_audit'
   import waves from '@/directive/waves/waves' // waves directive
-  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import Pagination from '@/components/Pagination'
+import score from "../../../mock/score"; // secondary package based on el-pagination
 
   export default {
     name: 'ComplexTable',
@@ -152,6 +168,8 @@
           college: '',
           studentId: '',
         },
+        //选修课课程信息
+        elective:[],
         //不及格课程信息
         failed: [],
         //未修的必修课信息
@@ -193,15 +211,18 @@
           })
       },
       handleDetail(row){
+        //初始化学生信息
         this.info=[]
         //将对象添加进数组
         this.info=this.info.concat(row)
         //获取学号
         let studentId=row.studentId
-        //获取不及格课程与未修必修课课程
+        //获取不及格课程、未修必修课课程、选修的选修课
         getDetail({studentId}).then((response)=>{
           this.failed=response.items[0]
           this.unchosen=response.items[1]
+          this.elective=response.items[2]
+          this.failed[0].maxscore=Math.max(Number(this.failed[0].score),Number(this.failed[0].retry_score),Number(this.failed[0].relearn_score))
         })
         this.dialogVisible=true
       },
