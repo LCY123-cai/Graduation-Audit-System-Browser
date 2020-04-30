@@ -77,7 +77,7 @@
           <span v-else>0</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程名称" align="center" width="100">
+      <el-table-column label="课程名称" align="center" width="150">
         <template slot-scope="{row}">
           <span v-if="row.course_name">{{ row.course_name }}</span>
           <span v-else>0</span>

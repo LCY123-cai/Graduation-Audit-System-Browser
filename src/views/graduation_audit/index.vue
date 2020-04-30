@@ -74,6 +74,11 @@
           <span>{{ row.elective_course_credit }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="详情" align="center" width="150">
+        <template slot-scope="{row}">
+          <el-link type="primary" @click="handleDetail(row)">查看详情</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="通过情况" align="center" min-width="110">
         <template slot-scope="{row}">
           <span v-if="row.gained_required_course_credit>=row.required_course_credit&&row.gained_elective_course_credit>=row.elective_course_credit&&row.failed_credit==='0.0'">
@@ -86,6 +91,39 @@
       </el-table-column>
     </el-table>
 
+    <el-dialog
+      title="详情"
+      :visible.sync="dialogVisible"
+    >
+      <el-table :data="info" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="studentId" label="学号" align="center"/>
+        <el-table-column prop="studentName" label="姓名" align="center"/>
+        <el-table-column prop="studentClass" label="班级" align="center"/>
+        <el-table-column prop="college" label="所在分院" align="center"/>
+        <el-table-column prop="major" label="专业" align="center"/>
+      </el-table>
+      <el-divider></el-divider>
+      <el-table :data="failed" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="academic_year" label="学年" align="center"/>
+        <el-table-column prop="term" label="学期" align="center"/>
+        <el-table-column prop="courseId" label="不及格课程代码" align="center"/>
+        <el-table-column prop="course_name" label="不及格课程名称" align="center"/>
+        <el-table-column prop="credit" label="课程学分" align="center"/>
+        <el-table-column prop="course_nature" label="课程性质" align="center"/>
+      </el-table>
+      <el-divider></el-divider>
+      <el-table :data="unchosen" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="college" label="开课学院" align="center"/>
+        <el-table-column prop="courseId" label="未修必修课课程代码" width="150" align="center"/>
+        <el-table-column prop="course_name" label="未修必修课课程名称"  width="150" align="center"/>
+        <el-table-column prop="credit" label="课程学分" align="center"/>
+        <el-table-column prop="course_nature" label="课程性质" align="center"/>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList()" />
 
   </div>
@@ -94,8 +132,7 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList , doAudit } from '@/api/graduation_audit'
-  import { createVote } from '@/api/vote'
+  import { fetchList , getDetail } from '@/api/graduation_audit'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -115,9 +152,12 @@
           college: '',
           studentId: '',
         },
-        temp: {
-          studentId: '',
-        },
+        //不及格课程信息
+        failed: [],
+        //未修的必修课信息
+        unchosen:[],
+        //学生信息
+        info:[],
         options: [{
           value: '理工分院',
           label: '理工分院'
@@ -134,6 +174,7 @@
           value: '经法分院',
           label: '经法分院'
         }],
+        dialogVisible:false,
         downloadLoading: false
       }
     },
@@ -144,24 +185,33 @@
       getList() {
         this.listLoading = true
           fetchList(this.listQuery).then(response => {
-            console.log(response.items[0])
             this.list = response.items[0]
             this.total = response.items[0].length
-            // Just to simulate the time of the request
             setTimeout(() => {
               this.listLoading = false
             }, 1.5 * 1000)
           })
       },
+      handleDetail(row){
+        this.info=[]
+        //将对象添加进数组
+        this.info=this.info.concat(row)
+        //获取学号
+        let studentId=row.studentId
+        //获取不及格课程与未修必修课课程
+        getDetail({studentId}).then((response)=>{
+          this.failed=response.items[0]
+          this.unchosen=response.items[1]
+        })
+        this.dialogVisible=true
+      },
       handleFilter() {
-        console.log(this.listQuery)
         this.listQuery.page = 1
         this.getList()
       },
       resetTemp() {
         this.temp = {
           studentId: undefined,
-          type: undefined,
         }
       }
     }

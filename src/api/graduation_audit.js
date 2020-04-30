@@ -8,9 +8,12 @@ export function fetchList(query) {
   })
 }
 
-export function doAudit() {
+export function getDetail(studentId) {
   return request({
-    url: '/audit/doaudit',
+    url: '/audit/detail',
     method: 'get',
+    params: studentId
   })
 }
+
+
