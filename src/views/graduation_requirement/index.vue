@@ -34,11 +34,11 @@
           <span>{{ row.enrollment_year }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学院" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.college }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="学院" align="center">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.college }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="专业" align="center">
         <template slot-scope="{row}">
           <span>{{ row.major }}</span>
@@ -68,9 +68,9 @@
         <el-form-item label="年级">
           <el-input disabled v-model="temp.enrollment_year" style="width: 120px"/>
         </el-form-item>
-        <el-form-item label="学院">
-          <el-input disabled v-model="temp.college" style="width: 120px"/>
-        </el-form-item>
+<!--        <el-form-item label="学院">-->
+<!--          <el-input disabled v-model="temp.college" style="width: 120px"/>-->
+<!--        </el-form-item>-->
         <el-form-item label="专业">
           <el-input disabled v-model="temp.major" style="width: 220px"/>
         </el-form-item>
@@ -150,7 +150,7 @@
         fetchList(this.listQuery).then(response => {
           console.log(response.items[0])
           this.list = response.items[0]
-          this.total = response.items[0].length
+          this.total = response.total
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false

@@ -59,9 +59,14 @@
           <span>{{ row.gained_elective_course_credit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="不及格学分" align="center" width="130">
+      <el-table-column label="不及格必修课学分" align="center" width="140">
         <template slot-scope="{row}">
-          <span>{{ row.failed_credit }}</span>
+          <span>{{ row.failed_required_credit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="不及格选修课学分" align="center" width="140">
+        <template slot-scope="{row}">
+          <span>{{ row.failed_elective_credit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="必修课应修学分" align="center" width="150">
@@ -81,7 +86,7 @@
       </el-table-column>
       <el-table-column label="通过情况" align="center" min-width="110">
         <template slot-scope="{row}">
-          <span v-if="row.gained_required_course_credit>=row.required_course_credit&&row.gained_elective_course_credit>=row.elective_course_credit&&row.failed_credit==='0.0'">
+          <span v-if="Number(row.gained_required_course_credit)>=Number(row.required_course_credit)&&Number(row.gained_elective_course_credit>=row.elective_course_credit)&&row.failed_required_credit==='0.0'">
             <svg-icon icon-class="right"></svg-icon>
           </span>
           <span v-else>
@@ -111,7 +116,7 @@
         <el-table-column prop="course_name" label="不及格课程名称" align="center" width="150"/>
         <el-table-column prop="credit" label="课程学分" align="center"/>
         <el-table-column prop="course_nature" label="课程性质" align="center"/>
-        <el-table-column prop="maxscore" label="最高成绩" align="center"/>
+        <el-table-column prop="score" label="最高成绩" align="center"/>
       </el-table>
       <el-divider>未修读的必修课列表</el-divider>
       <el-table :data="unchosen" border fit highlight-current-row style="width: 100%">
@@ -130,9 +135,7 @@
         <el-table-column prop="course_name" label="选修课课程名称"  width="150" align="center"/>
         <el-table-column prop="credit" label="课程学分" align="center"/>
         <el-table-column prop="course_nature" label="课程性质" align="center" width="120"/>
-        <el-table-column prop="score" label="成绩" align="center"/>
-        <el-table-column prop="retry_score" label="补考成绩" align="center"/>
-        <el-table-column prop="relearn_score" label="重修成绩" align="center"/>
+        <el-table-column prop="score" label="最高成绩" align="center"/>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>

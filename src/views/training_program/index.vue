@@ -108,7 +108,7 @@
         },
         downloadLoading: false,
         // 导入按钮的文本
-        importDataText: '导入数据(Excel文件)',
+        importDataText: '导入Excel文件(.xlsx)',
         // 导入按钮的图标
         importDataIcon: 'el-icon-upload2',
         // 导入按钮是否被禁用
@@ -123,8 +123,7 @@
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
           this.list = response.items[0]
-          this.total = response.items[0].length
-          // Just to simulate the time of the request
+          this.total = response.total
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
@@ -152,7 +151,7 @@
       },
       // 导入文件失败后回调
       onError() {
-        this.importDataText = '导入数据(Excel文件)';
+        this.importDataText = '导入Excel文件(.xlsx)';
         this.importDataIcon = 'el-icon-upload2';
         this.importDisabled = false;
         this.getList();
@@ -161,7 +160,7 @@
       // 导入文件成功后回调
       onSuccess() {
         // 成功后文本修改为原来的导入数据
-        this.importDataText = '导入数据(Excel文件)';
+        this.importDataText = '导入Excel文件(.xlsx)';
         // 图标修改
         this.importDataIcon = 'el-icon-upload2';
         // 将上传组件改为允许使用

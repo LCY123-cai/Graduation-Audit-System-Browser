@@ -37,62 +37,52 @@
       </el-table-column>
       <el-table-column label="姓名" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.studentName">{{ row.studentName }}</span>
-          <span v-else>0</span>
+          <span>{{ row.studentName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="年级" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.enrollment_year">{{ row.enrollment_year }}</span>
-          <span v-else>0</span>
+          <span>{{ row.enrollment_year }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学院" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.college">{{ row.college }}</span>
-          <span v-else>0</span>
+          <span>{{ row.college }}</span>
         </template>
       </el-table-column>
       <el-table-column label="专业" align="center" width="190">
         <template slot-scope="{row}">
-          <span v-if="row.major">{{ row.major }}</span>
-          <span v-else>0</span>
+          <span>{{ row.major }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学年" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.academic_year">{{ row.academic_year }}</span>
-          <span v-else>0</span>
+          <span>{{ row.academic_year }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学期" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.term">{{ row.term }}</span>
-          <span v-else>0</span>
+          <span>{{ row.term }}</span>
         </template>
       </el-table-column>
       <el-table-column label="课程代码" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.courseId">{{ row.courseId }}</span>
-          <span v-else>0</span>
+          <span>{{ row.courseId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="课程名称" align="center" width="150">
         <template slot-scope="{row}">
-          <span v-if="row.course_name">{{ row.course_name }}</span>
-          <span v-else>0</span>
+          <span>{{ row.course_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="课程性质" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.course_nature">{{ row.course_nature }}</span>
-          <span v-else>0</span>
+          <span>{{ row.course_nature }}</span>
         </template>
       </el-table-column>
       <el-table-column label="学分" align="center" width="100">
         <template slot-scope="{row}">
-          <span v-if="row.credit">{{ row.credit }}</span>
-          <span v-else>0</span>
+          <span>{{ row.credit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="成绩" align="center" width="100">
@@ -104,18 +94,6 @@
       <el-table-column label="补考成绩" align="center" width="100">
         <template slot-scope="{row}">
           <span v-if="row.retry_score">{{ row.retry_score }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="重学成绩" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.relearn_score">{{ row.relearn_score }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="重学标记" align="center" width="100">
-        <template slot-scope="{row}">
-          <span v-if="row.relearn_mark">{{ row.relearn_mark }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
@@ -151,7 +129,7 @@
         },
         downloadLoading: false,
         // 导入按钮的文本
-        importDataText: '导入数据(Excel文件)',
+        importDataText: '导入Excel文件(.xlsx)',
         // 导入按钮的图标
         importDataIcon: 'el-icon-upload2',
         // 导入按钮是否被禁用
@@ -165,8 +143,9 @@
       getList() {
         this.listLoading = true
         fetchList(this.listQuery).then(response => {
+          console.log(response)
           this.list = response.items[0]
-          this.total = response.items[0].length
+          this.total = response.total
           // Just to simulate the time of the request
           setTimeout(() => {
             this.listLoading = false
@@ -191,7 +170,7 @@
       },
       // 导入文件失败后回调
       onError() {
-        this.importDataText = '导入数据(Excel文件)';
+        this.importDataText = '导入Excel文件(.xlsx)';
         this.importDataIcon = 'el-icon-upload2';
         this.importDisabled = false;
         this.getList();
@@ -200,7 +179,7 @@
       // 导入文件成功后回调
       onSuccess() {
         // 成功后文本修改为原来的导入数据
-        this.importDataText = '导入数据(Excel文件)';
+        this.importDataText = '导入Excel文件(.xlsx)';
         // 图标修改
         this.importDataIcon = 'el-icon-upload2';
         // 将上传组件改为允许使用
