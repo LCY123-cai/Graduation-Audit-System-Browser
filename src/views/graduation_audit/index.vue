@@ -100,6 +100,21 @@
       title="详情"
       :visible.sync="dialogVisible"
     >
+      <el-dialog
+        width="30%"
+        title="等价课程设置"
+        :visible.sync="innerVisible"
+        append-to-body>
+        <el-form ref="dataForm" :model="temp" label-position="left" label-width="100px" style="width: 200px; margin-left:50px;">
+          <el-form-item label="等价课程代码">
+            <el-input v-model="temp.replace_courseId" style="width: 120px"/>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="innerVisible = false">取 消</el-button>
+          <el-button type="primary" @click="doSetting">确定</el-button>
+        </span>
+      </el-dialog>
       <el-table :data="info" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="studentId" label="学号" align="center"/>
         <el-table-column prop="studentName" label="姓名" align="center"/>
@@ -117,6 +132,13 @@
         <el-table-column prop="credit" label="课程学分" align="center"/>
         <el-table-column prop="course_nature" label="课程性质" align="center"/>
         <el-table-column prop="score" label="最高成绩" align="center"/>
+        <el-table-column label="学号"  align="center" width="130px">
+          <template slot-scope="{row,$index}">
+            <el-button type="success" size="mini" @click="handleSetting(row,$index)">
+              等价课程设置
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-divider>未修读的必修课列表</el-divider>
       <el-table :data="unchosen" border fit highlight-current-row style="width: 100%">
@@ -150,10 +172,9 @@
 <script>
 /* eslint-disable */
 
-  import { fetchList , getDetail } from '@/api/graduation_audit'
+  import { fetchList , getDetail , settingReplace } from '@/api/graduation_audit'
   import waves from '@/directive/waves/waves' // waves directive
   import Pagination from '@/components/Pagination'
-import score from "../../../mock/score"; // secondary package based on el-pagination
 
   export default {
     name: 'ComplexTable',
@@ -179,6 +200,12 @@ import score from "../../../mock/score"; // secondary package based on el-pagina
         unchosen:[],
         //学生信息
         info:[],
+        index:undefined,
+        temp:{
+          studentId:'',
+          original_courseId:'',
+          replace_courseId:''
+        },
         options: [{
           value: '理工分院',
           label: '理工分院'
@@ -195,6 +222,7 @@ import score from "../../../mock/score"; // secondary package based on el-pagina
           value: '经法分院',
           label: '经法分院'
         }],
+        innerVisible:false,
         dialogVisible:false,
         downloadLoading: false
       }
@@ -229,13 +257,52 @@ import score from "../../../mock/score"; // secondary package based on el-pagina
         })
         this.dialogVisible=true
       },
+      handleSetting(row,index){
+        this.resetTemp()
+        this.temp.studentId=row.studentId
+        this.temp.original_courseId=row.courseId
+        this.index=index
+        console.log(this.index)
+        this.innerVisible=true
+      },
+      doSetting(){
+        let studentId=this.temp.studentId
+        let original_courseId=this.temp.original_courseId
+        let replace_courseId=this.temp.replace_courseId
+        settingReplace({
+          studentId,
+          original_courseId,
+          replace_courseId
+        }).then((response)=>{
+          if (response.code===200){
+            this.$notify({
+              title: 'Success',
+              message: response.message,
+              type: 'success',
+              duration: 2000
+            })
+          }
+          else{
+            this.$notify({
+              title: 'Error',
+              message: response.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+          this.failed.splice(this.index, 1)
+          this.innerVisible=false
+        })
+      },
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
       },
       resetTemp() {
         this.temp = {
-          studentId: undefined,
+          studentId:'',
+          original_courseId:'',
+          replace_courseId:''
         }
       }
     }

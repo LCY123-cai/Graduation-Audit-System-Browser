@@ -16,4 +16,12 @@ export function getDetail(studentId) {
   })
 }
 
+export function settingReplace(query) {
+  return request({
+    url: '/audit/replace',
+    method: 'get',
+    params: query
+  })
+}
+
 
