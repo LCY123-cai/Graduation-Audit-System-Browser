@@ -253,7 +253,7 @@
           this.failed=response.items[0]
           this.unchosen=response.items[1]
           this.elective=response.items[2]
-          this.failed[0].maxscore=Math.max(Number(this.failed[0].score),Number(this.failed[0].retry_score),Number(this.failed[0].relearn_score))
+          // this.failed[0].maxscore=Math.max(Number(this.failed[0].score),Number(this.failed[0].retry_score),Number(this.failed[0].relearn_score))
         })
         this.dialogVisible=true
       },
